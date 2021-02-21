@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: image-randomizer
+  labels:
+    app: image-randomizer-label
+spec:
+  replicas: 2
+  
+  selector:
+    matchLabels:
+      app: image-randomizer-label
+
+  template: # Pod template
+    metadata:
+      labels: 
+        app: image-randomizer-label
+    spec:
+      containers:
+      - name: image-randomizer
+        image: oklahoma3/image-randomizer
+        ports:
+          - containerPort: 80
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "200m"

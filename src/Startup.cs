@@ -3,6 +3,7 @@ using ImageRandomizer.Extensions;
 using ImageRandomizer.Options;
 using ImageRandomizer.Services;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +33,8 @@ namespace ImageRandomizer
             services.AddSingleton<ImgurImageCache>();
             services.AddHostedService<ImgurImageCachingHostedService>();
 
+            services.AddHealthChecks();
+
             services.AddControllers();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "ImageRandomizer", Version = "v1" }); });
         }
@@ -52,7 +55,12 @@ namespace ImageRandomizer
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHealthChecks("/hc/live");
+                endpoints.MapHealthChecks("/hc/ready");
+            });
         }
     }
 }

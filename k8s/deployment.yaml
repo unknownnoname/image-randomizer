@@ -5,12 +5,10 @@ metadata:
   labels:
     app: image-randomizer-label
 spec:
-  replicas: 2
-  
+  replicas: 1
   selector:
     matchLabels:
       app: image-randomizer-label
-
   template: # Pod template
     metadata:
       labels: 
@@ -19,9 +17,24 @@ spec:
       containers:
       - name: image-randomizer
         image: oklahoma3/image-randomizer
+        imagePullPolicy: Always
         ports:
           - containerPort: 80
         resources:
           limits:
             memory: "128Mi"
             cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: "/hc/live"
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          failureThreshold: 2
+        readinessProbe:
+          httpGet:
+            path: "/hc/ready"
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          failureThreshold: 2

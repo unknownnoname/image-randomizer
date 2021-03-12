@@ -20,6 +20,9 @@ spec:
         imagePullPolicy: Always
         ports:
           - containerPort: 80
+        volumeMounts:
+        - name: image-randomizer-volume
+          mountPath: /data/images
         resources:
           limits:
             memory: "128Mi"
@@ -38,3 +41,7 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 10
           failureThreshold: 2
+      volumes:
+        - name: image-randomizer-volume
+          persistentVolumeClaim:
+            claimName: image-randomizer-pvc

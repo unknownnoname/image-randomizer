@@ -1,3 +1,4 @@
+using System.Drawing;
 using ImageRandomizer.ApiClients;
 using ImageRandomizer.Extensions;
 using ImageRandomizer.Options;
@@ -29,7 +30,7 @@ namespace ImageRandomizer
             services.ConfigureImgurClient<IGalleryClient>();
 
             services.AddScoped<IImgurImageDownloadService, ImgurImageDownloadService>();
-            
+
             services.AddSingleton<ImgurImageCache>();
             services.AddHostedService<ImgurImageCachingHostedService>();
 

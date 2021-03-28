@@ -20,7 +20,7 @@ namespace ImageRandomizer.Services
         
         private static readonly IReadOnlyCollection<string> ImageTypes = new List<string>
         {
-            "image/png", "image/jpeg", "image/gif"
+            "image/png", "image/jpeg"
         };
 
         public ImgurImageCache(IGalleryClient galleryClient)

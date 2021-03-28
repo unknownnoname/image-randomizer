@@ -1,6 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace ImageRandomizer.Services
 {
@@ -11,20 +15,33 @@ namespace ImageRandomizer.Services
     
     internal class ImgurImageDownloadService : IImgurImageDownloadService
     {
+        private readonly ILogger<Startup>  _logger;
+
+        public ImgurImageDownloadService(ILogger<Startup> logger)
+        {
+            _logger = logger;
+        }
+        
         public async Task<byte[]> DownloadAsync(string url)
         {
             using WebClient webClient = new WebClient();
 
-            byte[] bytes;
+            await using Stream stream = await webClient.OpenReadTaskAsync(url);
+            
+            var img = Image.FromStream(stream);
+            var path = $"/data/images/{Guid.NewGuid().ToString()}.{GetImageExtension(img)}";
+            img.Save(path, img.RawFormat);
 
-            await using (Stream stream = await webClient.OpenReadTaskAsync(url))
-            {
-                bytes = StreamToByteArray(stream);
-            }
+            _logger.LogInformation($"Saving image to {path}");
 
-            return bytes;
+            return await File.ReadAllBytesAsync(path);
         }
-        
+
+        private string GetImageExtension(Image image)
+        {
+            return Equals(image.RawFormat, ImageFormat.Png) ? "png" : "jpg";
+        }
+
         private static byte[] StreamToByteArray(Stream stream)
         {
             if (stream is MemoryStream memoryStream)

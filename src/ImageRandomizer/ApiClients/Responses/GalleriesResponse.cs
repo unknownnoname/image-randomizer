@@ -94,7 +94,7 @@ namespace ImageRandomizer.ApiClients.Responses
         public string Topic { get; set; }
 
         [JsonProperty("topic_id")]
-        public long TopicId { get; set; }
+        public long? TopicId { get; set; }
 
         [JsonProperty("images_count")]
         public long ImagesCount { get; set; }

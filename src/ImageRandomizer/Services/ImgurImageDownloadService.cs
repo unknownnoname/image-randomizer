@@ -41,24 +41,5 @@ namespace ImageRandomizer.Services
         {
             return Equals(image.RawFormat, ImageFormat.Png) ? "png" : "jpg";
         }
-
-        private static byte[] StreamToByteArray(Stream stream)
-        {
-            if (stream is MemoryStream memoryStream)
-            {
-                return memoryStream.ToArray();                
-            }
-
-            return ReadFully(stream);
-        }
-        
-        private static byte[] ReadFully(Stream input)
-        {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                input.CopyTo(ms);
-                return ms.ToArray();
-            }
-        }
     }
 }

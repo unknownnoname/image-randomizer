@@ -1,0 +1,27 @@
+﻿apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: image-url-scraper
+spec:
+  schedule: "*/10 * * * *"
+  startingDeadlineSeconds: 100
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 60
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: image-url-scraper
+              image: oklahoma3/image-url-scraper
+              imagePullPolicy: Always
+              ports:
+                - containerPort: 80
+              volumeMounts:
+                - name: image-randomizer-volume
+                  mountPath: /data/images
+          volumes:
+            - name: image-randomizer-volume
+              persistentVolumeClaim:
+                claimName: image-randomizer-pvc
